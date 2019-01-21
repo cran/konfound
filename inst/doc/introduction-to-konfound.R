@@ -5,8 +5,7 @@ comment = "#>"
 )
 
 ## ----gh-installation, eval = FALSE---------------------------------------
-#  install.packages("devtools")
-#  devtools::install_github("jrosen48/konfound")
+#  install.packages("konfound")
 
 ## ---- eval = F-----------------------------------------------------------
 #  library(konfound)
