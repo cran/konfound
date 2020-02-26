@@ -31,6 +31,7 @@ test_sensitivity <- function(est_eff,
                              to_return,
                              model_object,
                              tested_variable) {
+  if (nu != 0) warning("You entered a non-zero null hypothesis about an effect; this is being interpreted in terms of a partial correlation. Sampling variability is not accounted for.")
 
   # calculating statistics used in every case
   if (est_eff < 0) {
@@ -125,7 +126,7 @@ test_sensitivity <- function(est_eff,
 
   else if (to_return == "raw_output") {
     return(output_df(est_eff, beta_threshold, est_eff, bias, sustain, recase, obs_r, critical_r, r_con, itcv))
-  } else if (to_return == "thresh_plot") {
+  } else if (to_return == "thresh_plot") { # this still makes sense for NLMs (just not quite as accurate)
     return(plot_threshold(beta_threshold = beta_threshold, est_eff = est_eff))
   } else if (to_return == "corr_plot") {
     return(plot_correlation(r_con = r_con, obs_r = obs_r, critical_r = critical_r))

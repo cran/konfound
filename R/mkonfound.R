@@ -10,6 +10,7 @@
 #' @return prints the bias and the number of cases that would have to be replaced with cases for which there is no effect to invalidate the inference for each of the cases in the data.frame
 #' @examples
 #' d <- read.csv("https://msu.edu/~kenfrank/example%20dataset%20for%20mkonfound.csv")
+#' d <- d[1:3, ] # this is only so that the example runs more quickly
 #' str(d)
 #' mkonfound(d, t, df)
 #' @export
@@ -39,7 +40,7 @@ mkonfound <- function(d, t, df, alpha = .05, tails = 2, return_plot = FALSE) {
       ggplot2::scale_fill_manual("", values = c("#1F78B4", "#A6CEE3")) +
       ggplot2::theme_bw() +
       ggplot2::ggtitle("Histogram of Percent Bias") +
-      ggplot2::facet_grid(~ action) +
+      ggplot2::facet_grid(~action) +
       ggplot2::scale_y_continuous(breaks = 1:nrow(results_df)) +
       ggplot2::theme(legend.position = "none") +
       ggplot2::ylab("Count") +
@@ -74,20 +75,17 @@ core_sensitivity_mkonfound <- function(t, df, alpha = .05, tails = 2) {
     pct_bias <- NA
   }
 
-  # For correlation based approach (for calculating ITCV)
-
+  # # For correlation based approach (for calculating ITCV)
   if ((abs(obs_r) > abs(critical_r)) & ((obs_r * critical_r) > 0)) {
     mp <- -1
   } else {
     mp <- 1
   }
-
   itcv <- (obs_r - critical_r) / (1 + mp * abs(critical_r))
   r_con <- round(sqrt(abs(itcv)), 3)
 
   out <- dplyr::data_frame(t, df, action, inference, pct_bias, itcv, r_con)
   names(out) <- c("t", "df", "action", "inference", "pct_bias_to_change_inference", "itcv", "r_con")
-
   out$pct_bias_to_change_inference <- round(out$pct_bias_to_change_inference, 3)
   out$itcv <- round(out$itcv, 3)
   out$action <- as.character(out$action)
