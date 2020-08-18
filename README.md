@@ -33,10 +33,6 @@ install.packages("devtools")
 devtools::install_github("jrosen48/konfound")
 ```
 
-    #> Loading konfound
-    #> Sensitivity analysis as described in Frank, Maroulis, Duong, and Kelcey (2013) and in Frank (2000).
-    #> For more information visit http://konfound-it.com.
-
 # Use of konfound
 
 #### pkonfound() for published studies
@@ -48,6 +44,8 @@ inference for a regression coefficient:
 
 ``` r
 library(konfound)
+#> Sensitivity analysis as described in Frank, Maroulis, Duong, and Kelcey (2013) and in Frank (2000).
+#> For more information visit http://konfound-it.com.
 ```
 
 ``` r
@@ -160,15 +158,64 @@ mkonfound(d, t, df)
 
 # Features in-development
 
-There is an in-development non-linear
-option:
+There is an in-development non-linear option:
 
 ``` r
 nl_output <- pkonfound(-0.2, 0.103, 20888, 3, n_trm = 17888, non_linear = TRUE)
 #> Note that this output is from an approach for non-linear models that is developmental and unpublished
 ```
 
+This function can also take a 2 x 2 table of treatment versus control
+cases and success versus failure for the outcome, i.e.:
+
+``` r
+tkonfound(35, 17, 17, 38)
+#> [[1]]
+#> [1] "The tkonfound function calculates the number of cases that would have to be switched from one cell to another of a 2x2 table to invalidate an inference made about the association between the rows and columns. This can be applied to treatment vs control with successful vs unsuccessful outcomes."
+#> 
+#> [[2]]
+#> [1] "See konfound_fig for full and accessible details in graphic form!"
+#> 
+#> [[3]]
+#> [1] "To invalidate the inference, 10 cases need to be transferred from treatment success to treatment failure, as shown, from the User-entered Table to the Transfer Table."
+#> 
+#> $User_enter_value
+#>           Fail Success
+#> Control     35      17
+#> Treatment   17      38
+#> 
+#> $Transfer_Table
+#>           Fail Success
+#> Control     35      17
+#> Treatment   27      28
+#> 
+#> [[6]]
+#> [1] "For the User-entered Table, we have a Pearson's chi square of 14.176, with p value of 0.000."
+#> 
+#> [[7]]
+#> [1] "For the Transfer Table, we have a Pearson's chi square of 3.640, with p value of 0.056."
+```
+
 Print `nl_output` to see the output.
+
+You can also draw figures for change in effect size as a function of
+switching outcomes.
+
+``` r
+tkonfound_fig(35, 17, 17, 38)
+#> [[1]]
+```
+
+![](README-unnamed-chunk-10-1.png)<!-- -->
+
+    #> 
+    #> [[2]]
+    #> [1] "A bend in line indicates switches from the control row because the treatment row was exhausted."
+    #> 
+    #> [[3]]
+    #> Warning: Removed 27 rows containing missing values (geom_label_repel).
+
+![](README-unnamed-chunk-10-2.png)<!-- -->
 
 # Other information
 
@@ -196,4 +243,5 @@ file).
 ### Code of Conduct
 
 Please note that this project is released with a Contributor Code of
-Conduct available at <http://contributor-covenant.org/version/1/0/0/>
+Conduct available at
+<https://www.contributor-covenant.org/version/1/0/0/>
