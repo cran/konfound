@@ -41,6 +41,18 @@ model_output$corr_plot
 pkonfound(.4, 2, 100, 3, to_return = "raw_output")
 
 ## -----------------------------------------------------------------------------
+pkonfound(a = 35, b = 17, c = 17, d = 38)
+
+## -----------------------------------------------------------------------------
+my_table <- tibble::tribble(
+~unsuccess, ~success,
+35,         17,
+17,         38,
+)
+
+pkonfound(two_by_two_table = my_table)
+
+## -----------------------------------------------------------------------------
 m1 <- lm(mpg ~ wt + hp + qsec, data = mtcars)
 m1
 
@@ -70,6 +82,10 @@ if (requireNamespace("forcats")) {
     m2 <- glm(married ~ age, data = d, family = binomial(link = "logit"))
     konfound(m2, age)
 }
+
+## ---- eval = FALSE------------------------------------------------------------
+#  m4 <- glm(outcome ~ condition, data = binary_dummy_data)
+#  konfound(m4, condition, two_by_two = TRUE)
 
 ## -----------------------------------------------------------------------------
 if (requireNamespace("lme4")) {

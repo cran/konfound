@@ -1,6 +1,6 @@
 # konfound-lm
 
-konfound_lm <- function(model_object, tested_variable_string, test_all, alpha, tails, to_return) {
+konfound_lm <- function(model_object, tested_variable_string, test_all, alpha, tails, index, to_return) {
   tidy_output <- broom::tidy(model_object) # tidying output
   glance_output <- broom::glance(model_object)
 
@@ -10,10 +10,10 @@ konfound_lm <- function(model_object, tested_variable_string, test_all, alpha, t
     coef_df <- tidy_output[-1, ]
   } # to remove intercept
 
-  est_eff <- round(coef_df$estimate, 3)
-  std_err <- round(coef_df$std.error, 3)
-  n_obs <- glance_output$df + glance_output$df.residual
-  n_covariates <- glance_output$df - 2 # (for intercept and coefficient)
+  est_eff <- coef_df$estimate
+  std_err <- coef_df$std.error
+  n_obs <- glance_output$nobs
+  n_covariates <- glance_output$df
 
   if (test_all == FALSE) {
     out <- test_sensitivity(
@@ -23,6 +23,7 @@ konfound_lm <- function(model_object, tested_variable_string, test_all, alpha, t
       n_covariates = n_covariates,
       alpha = alpha,
       tails = tails,
+      index = index,
       nu = 0,
       to_return = to_return,
       model_object = model_object,

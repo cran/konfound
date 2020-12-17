@@ -1,6 +1,6 @@
-# konfound 0.2.2
+# konfound 0.3.0
 
-* Bug fix for broom dependency
+* integrate non-linear functions in `tkonfound()` into `pkonfound()` and `konfound()`
 
 # konfound 0.2.1
 

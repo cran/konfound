@@ -9,8 +9,13 @@ konfound(
   tested_variable,
   alpha = 0.05,
   tails = 2,
+  index = "RIR",
   to_return = "print",
-  test_all = FALSE
+  test_all = FALSE,
+  two_by_two = FALSE,
+  n_treat = NULL,
+  switch_trm = TRUE,
+  replace = "control"
 )
 }
 \arguments{
@@ -22,9 +27,19 @@ konfound(
 
 \item{tails}{integer whether hypothesis testing is one-tailed (1) or two-tailed (2; defaults to 2)}
 
+\item{index}{whether output is RIR or IT (impact threshold); defaults to "RIR"}
+
 \item{to_return}{whether to return a data.frame (by specifying this argument to equal "raw_output" for use in other analyses) or a plot ("plot"); default is to print ("print") the output to the console; can specify a vector of output to return}
 
 \item{test_all}{whether to carry out the sensitivity test for all of the coefficients (defaults to FALSE)}
+
+\item{two_by_two}{whether or not the tested variable is a dichotomous variable in a GLM; if so, the 2X2 table approach is used; only works for single variables at present (so test_all = TRUE will return an error)}
+
+\item{n_treat}{the number of cases associated with the treatment condition; applicable only when model_type = "logistic"}
+
+\item{switch_trm}{whether to switch the treatment and control cases; defaults to FALSE; applicable only when model_type = "logistic"}
+
+\item{replace}{whether using entire sample or the control group to calculate the base rate; default is the entire sample}
 }
 \value{
 prints the bias and the number of cases that would have to be replaced with cases for which there is no effect to invalidate the inference
@@ -55,4 +70,8 @@ if (requireNamespace("lme4")) {
   m3 <- fm1 <- lme4::lmer(Reaction ~ Days + (1 | Subject), sleepstudy)
   konfound(m3, Days)
 }
+
+m4 <- glm(outcome ~ condition, data = binary_dummy_data, family = binomial(link = "logit"))
+konfound(m4, condition, two_by_two = TRUE, n_treat = 55)
+
 }

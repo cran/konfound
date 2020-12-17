@@ -1,6 +1,6 @@
 # konfound-glm
 
-konfound_glm <- function(model_object, tested_variable_string, test_all, alpha, tails, to_return) {
+konfound_glm <- function(model_object, tested_variable_string, test_all, alpha, tails, index = "RIR", to_return) {
   tidy_output <- broom::tidy(model_object) # tidying output
   glance_output <- broom::glance(model_object)
 
@@ -11,11 +11,11 @@ konfound_glm <- function(model_object, tested_variable_string, test_all, alpha, 
     coef_df$est_eff <- suppressWarnings(summary(margins::margins(model_object))$AME[names(summary(margins::margins(model_object))$AME) == tested_variable_string])
   } # to remove intercept
 
-  est_eff <- round(coef_df$estimate, 3)
+  est_eff <- coef_df$estimate
   est_eff <- suppressWarnings(summary(margins::margins(model_object))$AME[names(summary(margins::margins(model_object))$AME) == tested_variable_string])
-  std_err <- round(coef_df$std.error, 3)
-  n_obs <- glance_output$df.null
-  n_covariates <- glance_output$df.null - 2 # (for intercept and coefficient)
+  std_err <- coef_df$std.error
+  n_obs <- glance_output$nobs
+  n_covariates <- glance_output$df.null - glance_output$df.residual
 
   if (test_all == FALSE) {
     out <- test_sensitivity(
@@ -25,6 +25,7 @@ konfound_glm <- function(model_object, tested_variable_string, test_all, alpha, 
       n_covariates = n_covariates,
       alpha = alpha,
       tails = tails,
+      index = index,
       nu = 0,
       to_return = to_return,
       model_object = model_object,
