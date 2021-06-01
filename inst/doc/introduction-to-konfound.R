@@ -94,11 +94,11 @@ if (requireNamespace("lme4")) {
     konfound(m3, Days)
 }
 
-## -----------------------------------------------------------------------------
-d <- read.csv("https://msu.edu/~kenfrank/example%20dataset%20for%20mkonfound.csv")
-head(d)
-mkonfound(d, t, df)
+## ---- eval = FALSE------------------------------------------------------------
+#  d <- read.csv("https://msu.edu/~kenfrank/example%20dataset%20for%20mkonfound.csv")
+#  head(d)
+#  mkonfound(d, t, df)
 
-## -----------------------------------------------------------------------------
-mkonfound(d, t, df, return_plot = T)
+## ---- eval = FALSE------------------------------------------------------------
+#  mkonfound(d, t, df, return_plot = T)
 

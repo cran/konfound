@@ -1,6 +1,5 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
 <!-- badges: start -->
 
 [![CRAN
@@ -137,23 +136,28 @@ konfound(m1, wt)
 
 ## mkonfound for meta-analyses including sensitivity analysis
 
-We can use an existing dataset, such as the CSV file
-[here](https://msu.edu/~kenfrank/example%20dataset%20for%20mkonfound.csv).
+We can use an existing (and built-in) dataset, such as `mkonfound_ex`.
 
 ``` r
-d <- read.csv("https://msu.edu/~kenfrank/example%20dataset%20for%20mkonfound.csv")
-head(d) 
-#>           t  df
-#> 1  7.076763 178
-#> 2  4.127893 193
-#> 3  1.893137  47
-#> 4 -4.166395 138
-#> 5 -1.187599  97
-#> 6  3.585478  87
-mkonfound(d, t, df)
+mkonfound_ex
+#> # A tibble: 30 x 2
+#>         t    df
+#>     <dbl> <dbl>
+#>  1  7.08    178
+#>  2  4.13    193
+#>  3  1.89     47
+#>  4 -4.17    138
+#>  5 -1.19     97
+#>  6  3.59     87
+#>  7  0.282   117
+#>  8  2.55     75
+#>  9 -4.44    137
+#> 10 -2.05    195
+#> # … with 20 more rows
+mkonfound(mkonfound_ex, t, df)
 #> # A tibble: 30 x 7
 #>         t    df action      inference       pct_bias_to_change_inf…   itcv r_con
-#>     <dbl> <int> <chr>       <chr>                             <dbl>  <dbl> <dbl>
+#>     <dbl> <dbl> <chr>       <chr>                             <dbl>  <dbl> <dbl>
 #>  1  7.08    178 to_invalid… reject_null                       68.8   0.378 0.614
 #>  2  4.13    193 to_invalid… reject_null                       50.6   0.168 0.41 
 #>  3  1.89     47 to_sustain  fail_to_reject…                    5.47 -0.012 0.11 
@@ -173,12 +177,12 @@ The above functions have a number of extensions; the below tables
 represent how `pkonfound()` and `konfound()` can be used:
 
 | Outcome    | Predictor: Continuous                                                       | Predictor: Binary                                                                                               |
-| :--------- | :-------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------- |
+|:-----------|:----------------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------|
 | Continuous | `pkonfound(est_eff, std_err, n_obs, n_covariates)`                          | `pkonfound(est_eff, std_err, n_obs, n_covariates)`                                                              |
 | Logistic   | `pkonfound(est_eff, std_err, n_obs, n_covariates, model_type = 'logistic')` | `pkonfound(est_eff, std_err, n_obs, n_covariates, n_treat, model_type = 'logistic')` or `pkonfound(a, b, c, d)` |
 
 | Outcome    | Predictor: Continuous | Predictor: Binary                     |
-| :--------- | :-------------------- | :------------------------------------ |
+|:-----------|:----------------------|:--------------------------------------|
 | Continuous | `konfound(m, var)`    | `konfound(m, var)`                    |
 | Logistic   | `konfound(m, var)`    | `konfound(m, var, two_by_two = TRUE)` |
 
@@ -191,13 +195,13 @@ Note that there are additional arguments for each of thes functions; see
 
 To learn more about sensitivity analysis, please visit:
 
-  - The [Introduction to konfound
+-   The [Introduction to konfound
     vignette](https://jrosen48.github.io/konfound/articles/Introduction_to_konfound.html),
     with detailed information about each of the functions
     (`pkonfound()`, `konfound()`, and `mkounfound()`)
-  - The causal inference section of Ken Frank’s website
+-   The causal inference section of Ken Frank’s website
     [here](https://msu.edu/~kenfrank/research.htm#causal)
-  - The [konfound interactive web
+-   The [konfound interactive web
     application](https://jmichaelrosenberg.shinyapps.io/shinykonfound/),
     with links to PowerPoints and key publications
 

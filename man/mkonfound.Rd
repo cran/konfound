@@ -26,8 +26,9 @@ prints the bias and the number of cases that would have to be replaced with case
 For fitted models, this command carries out sensitivity analysis for a number of models, when their parameters stored in a data.frame.
 }
 \examples{
-d <- read.csv("https://msu.edu/~kenfrank/example\%20dataset\%20for\%20mkonfound.csv")
-d <- d[1:3, ] # this is only so that the example runs more quickly
+\dontrun{
+mkonfound_ex
 str(d)
-mkonfound(d, t, df)
+mkonfound(mkonfound_ex, t, df)
+}
 }
