@@ -1,6 +1,6 @@
-85594728df81e65f6284f3316a2b99a1 *DESCRIPTION
+92d1b97e02a02f8b930c416e66503ba0 *DESCRIPTION
 bbec74af268844c6f27105f1b225aa62 *LICENSE
-5c066a4f6ff2bfd49232960d9052c456 *NAMESPACE
+cfbb762d9ad2a70ae972d46544b26ceb *NAMESPACE
 47329dbf29da021f702c1c041137548d *NEWS.md
 f3aa5f238f2f5c718073d8c6ad7fe2d2 *R/binary_dummy_data.R
 09674dc41634894fbadcf5b2fdbcae32 *R/concord1.R
@@ -12,7 +12,7 @@ fac3c9451cdaab8501a548240b287318 *R/helper_output_table.R
 8d1b5a56aac700872546838fc42c96be *R/helper_plot_correlation.R
 13301c73ac21a0a1f99e7bbd325737a0 *R/helper_plot_threshold.R
 a82535cad547e3fb279157031757d2c8 *R/konfound-glm-dichotomous.R
-c88b43631a9a62968282a04cf175a071 *R/konfound-glm.R
+579e83f9cc3e12a7c4a46efb546cd452 *R/konfound-glm.R
 7c561a9c1167160232c632a7a9e07798 *R/konfound-lm.R
 7bd38410b26c9146e9057b8da712e873 *R/konfound-lmer.R
 e684900762be43cb4835c3aa8d430f47 *R/konfound.R
@@ -33,8 +33,8 @@ c9448c19cbd59b73fb334f242e5b30ea *build/vignette.rds
 d0dc086d6694848f69146106feefa096 *data/concord1.rda
 843e24f6ec2a9a1a9dd31f6e9d8578aa *data/mkonfound_ex.rda
 30dce616dad1fc3c658fb2ab6fd4fab1 *inst/doc/introduction-to-konfound.R
-10c55df54c263fd31dcee8e05c400380 *inst/doc/introduction-to-konfound.Rmd
-daceaf94dec1a92544e229f5817d203a *inst/doc/introduction-to-konfound.html
+6ff7a3ebe88b36ec884f7d3093a92809 *inst/doc/introduction-to-konfound.Rmd
+5009676cc859b17da8b146880201e2b1 *inst/doc/introduction-to-konfound.html
 02e01f32720f84f49a1e867c9d8c6d82 *man/binary_dummy_data.Rd
 966b6f8f672645deff95993dc62d32ed *man/cal_delta_star.Rd
 bbc6b76bfb9ad7a84efb83bf132fae22 *man/cal_rxy.Rd
@@ -62,8 +62,8 @@ af5897ddb794b1c54e8a6d4008a469c7 *man/verify_reg_Gzcv.Rd
 b271f4335eefd284364f70e73029f52c *man/verify_reg_uncond.Rd
 a904bd203a348cefe8c9bb2eb1e2a577 *man/zzz.Rd
 071d2f1617a32d61c7721104cf4918a1 *tests/testthat.R
-830761847d2693fd9f72effe7600b8d6 *tests/testthat/test-konfound.R
+754d72adf5ca2f03dde05f3c78ad95ab *tests/testthat/test-konfound.R
 b19920c62d965b77557635adae25d650 *tests/testthat/test-mkonfound.r
 0da7312ab5950417d062cf34536966c3 *tests/testthat/test-pkonfound.R
 1d3638c61c21e43ece2f7d87bd71e520 *tests/testthat/test-tkonfound.R
-10c55df54c263fd31dcee8e05c400380 *vignettes/introduction-to-konfound.Rmd
+6ff7a3ebe88b36ec884f7d3093a92809 *vignettes/introduction-to-konfound.Rmd

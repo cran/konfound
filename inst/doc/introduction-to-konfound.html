@@ -12,7 +12,7 @@
 
 <meta name="author" content="Joshua Rosenberg, Ran Xu, Qinyun Lin, and Ken Frank" />
 
-<meta name="date" content="2024-03-18" />
+<meta name="date" content="2024-04-12" />
 
 <title>Introduction to konfound</title>
 
@@ -341,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Introduction to konfound</h1>
 <h4 class="author">Joshua Rosenberg, Ran Xu, Qinyun Lin, and Ken
 Frank</h4>
-<h4 class="date">2024-03-18</h4>
+<h4 class="date">2024-04-12</h4>
 
 
 
@@ -555,9 +555,12 @@ are likely less important than those that are known an included (i.e.,
 we have a good sense of the factors that matter in terms of educational
 achievement).</p>
 <p><strong>For logistic regression models fit with glm()</strong></p>
-<p>Effects for these models are interpreted on the basis of average
-partial (or marginal) effects (calculated using the <code>margins</code>
-package).</p>
+<p>Effects for these models are typically interpreted on the basis of
+average partial (or marginal) effects (calculated using the
+<code>margins</code> package).</p>
+<p>Due to an issue with the margins and predictions package, these are
+the raw coefficients, not the average marginal effects; we will address
+this in future patches.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="co"># if forcats is not installed, this install it first using install.packages(&quot;forcats&quot;) for this to run</span></span>
 <span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">requireNamespace</span>(<span class="st">&quot;forcats&quot;</span>)) {</span>
 <span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>    d <span class="ot">&lt;-</span> forcats<span class="sc">::</span>gss_cat</span>
@@ -567,22 +570,26 @@ package).</p>
 <span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>    m2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(married <span class="sc">~</span> age, <span class="at">data =</span> d, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>))</span>
 <span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>    <span class="fu">konfound</span>(m2, age)</span>
 <span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>}</span>
-<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="co">#&gt; Robustness of Inference to Replacement (RIR):</span></span>
-<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt; To invalidate an inference,  35.357 % of the estimate would have to be due to bias. </span></span>
-<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co">#&gt; This is based on a threshold of 0.002 for statistical significance (alpha = 0.05).</span></span>
-<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a><span class="co">#&gt; To invalidate an inference,  7569  observations would have to be replaced with cases</span></span>
-<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="co">#&gt; for which the effect is 0 (RIR = 7569).</span></span>
-<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="co">#&gt; See Frank et al. (2013) for a description of the method.</span></span>
-<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="co">#&gt; Citation: Frank, K.A., Maroulis, S., Duong, M., and Kelcey, B. (2013).</span></span>
-<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a><span class="co">#&gt; What would it take to change an inference?</span></span>
-<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a><span class="co">#&gt; Using Rubin&#39;s causal model to interpret the </span></span>
-<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a><span class="co">#&gt;         robustness of causal inferences.</span></span>
-<span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a><span class="co">#&gt; Education, Evaluation and </span></span>
-<span id="cb13-24"><a href="#cb13-24" tabindex="-1"></a><span class="co">#&gt;                        Policy Analysis, 35 437-460.</span></span>
-<span id="cb13-25"><a href="#cb13-25" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code></pre></div>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="co">#&gt; Warning in konfound_glm(model_object = model_object, tested_variable_string =</span></span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt; tested_variable_string, : Due to an issue with the margins and predictions</span></span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co">#&gt; package, these are the raw coefficients, not the average marginal effects; we</span></span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="co">#&gt; will address this in future patches</span></span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a><span class="co">#&gt; Robustness of Inference to Replacement (RIR):</span></span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="co">#&gt; To invalidate an inference,  84.006 % of the estimate would have to be due to bias. </span></span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="co">#&gt; This is based on a threshold of 0.002 for statistical significance (alpha = 0.05).</span></span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="co">#&gt; To invalidate an inference,  17983  observations would have to be replaced with cases</span></span>
+<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="co">#&gt; for which the effect is 0 (RIR = 17983).</span></span>
+<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a><span class="co">#&gt; See Frank et al. (2013) for a description of the method.</span></span>
+<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a><span class="co">#&gt; Citation: Frank, K.A., Maroulis, S., Duong, M., and Kelcey, B. (2013).</span></span>
+<span id="cb13-24"><a href="#cb13-24" tabindex="-1"></a><span class="co">#&gt; What would it take to change an inference?</span></span>
+<span id="cb13-25"><a href="#cb13-25" tabindex="-1"></a><span class="co">#&gt; Using Rubin&#39;s causal model to interpret the </span></span>
+<span id="cb13-26"><a href="#cb13-26" tabindex="-1"></a><span class="co">#&gt;         robustness of causal inferences.</span></span>
+<span id="cb13-27"><a href="#cb13-27" tabindex="-1"></a><span class="co">#&gt; Education, Evaluation and </span></span>
+<span id="cb13-28"><a href="#cb13-28" tabindex="-1"></a><span class="co">#&gt;                        Policy Analysis, 35 437-460.</span></span>
+<span id="cb13-29"><a href="#cb13-29" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code></pre></div>
 <p><strong>For logistic regression models fit with glm() with a
 dichotomous predictor of interest</strong></p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">glm</span>(outcome <span class="sc">~</span> condition, <span class="at">data =</span> binary_dummy_data)</span>
