@@ -1,7 +1,7 @@
 Type: Package
 Package: konfound
 Title: Quantify the Robustness of Causal Inferences
-Version: 0.5.1
+Version: 1.0.1
 Authors@R: c(
     person(c("Joshua", "M"), "Rosenberg", , "jmrosen48@gmail.com", role = c("aut", "cre")),
     person("Ran", "Xu", , "ranxu@msu.edu", role = "ctb"),
@@ -9,7 +9,12 @@ Authors@R: c(
     person("Spiro", "Maroulis", , "Spiro.Maroulis@asu.edu", role = "ctb"),
     person("Sarah", "Narvaiz", , "snarvaiz@alum.utk.edu", role = "ctb"),
     person(c("Kenneth", "A"), "Frank", , "kenfrank@msu.edu", role = "ctb"),
-    person("Wei", "Wang", , "wwang93@vols.utk.edu", role = "ctb")
+    person("Wei", "Wang", , "wwang93@vols.utk.edu", role = "ctb"),
+    person("Yunhe", "Cui", , "yunhe.cui@uconn.edu", role = "ctb"),
+    person("Gaofei", "Zhang", , "gaofei.2.zhang@uconn.edu", role = "ctb"),
+    person("Xuesen", "Cheng", , "chengxu3@msu.edu", role = "ctb"),
+    person("JiHoon", "Choi", , "choijih3@msu.edu", role = "ctb"),
+    person("Guan", "Saw", , "guan.saw@cgu.edu", role = "ctb")
   )
 Description: Statistical methods that quantify the conditions necessary to
     alter inferences, also known as sensitivity analysis, are becoming
@@ -31,9 +36,10 @@ Description: Statistical methods that quantify the conditions necessary to
     inferences for a user's own model, a single published study and
     multiple studies respectively.
 License: MIT + file LICENSE
-URL: https://github.com/konfound-project/konfound
+URL: https://github.com/konfound-project/konfound,
+        https://konfound-it.org/konfound/
 BugReports: https://github.com/konfound-project/konfound/issues
-Depends: R (>= 2.10)
+Depends: R (>= 3.5.0)
 Imports: broom, broom.mixed, crayon, dplyr, ggplot2, lavaan, purrr,
         rlang, tidyr, lme4 (>= 1.1-35.1), tibble, ggrepel, pbkrtest
 Suggests: covr, devtools, forcats, knitr, rmarkdown, mice, roxygen2,
@@ -43,14 +49,19 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.1
 NeedsCompilation: no
-Packaged: 2024-04-12 19:45:19 UTC; jrosenb8
+Packaged: 2024-10-07 22:09:05 UTC; jrosenb8
 Author: Joshua M Rosenberg [aut, cre],
   Ran Xu [ctb],
   Qinyun Lin [ctb],
   Spiro Maroulis [ctb],
   Sarah Narvaiz [ctb],
   Kenneth A Frank [ctb],
-  Wei Wang [ctb]
+  Wei Wang [ctb],
+  Yunhe Cui [ctb],
+  Gaofei Zhang [ctb],
+  Xuesen Cheng [ctb],
+  JiHoon Choi [ctb],
+  Guan Saw [ctb]
 Maintainer: Joshua M Rosenberg <jmrosen48@gmail.com>
 Repository: CRAN
-Date/Publication: 2024-04-12 21:10:09 UTC
+Date/Publication: 2024-10-07 22:30:02 UTC

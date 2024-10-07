@@ -11,61 +11,59 @@ comment = "#>"
 library(konfound)
 
 ## -----------------------------------------------------------------------------
-pkonfound(2, .4, 100, 3)
+pkonfound(est_eff = 2, std_err = .4, n_obs = 100, n_covariates = 3)
 
 ## -----------------------------------------------------------------------------
-pkonfound(.4, 2, 100, 3)
+pkonfound(est_eff = 2, std_err = .4, n_obs = 100, n_covariates = 3, index = "IT")
+
+## ----fig.width = 6, fig.height = 6--------------------------------------------
+pkonfound(est_eff = 2, std_err = .4, n_obs = 100, n_covariates = 3, to_return = "thresh_plot")
+
+## ----fig.width = 6, fig.height = 6--------------------------------------------
+pkonfound(est_eff = 2, std_err = .4, n_obs = 100, n_covariates = 3, to_return = "corr_plot")
+
+## ----fig.width = 6, fig.height = 6--------------------------------------------
+pkonfound(est_eff = 2, std_err = .4, n_obs = 100, n_covariates = 3, to_return = "raw_output")
 
 ## -----------------------------------------------------------------------------
-pkonfound(est_eff = -2.2,
-          std_err = .65, 
-          n_obs = 200,
-          n_covariates = 3)
+pkonfound(a = 35, b = 17, c = 17, d = 38)
 
 ## -----------------------------------------------------------------------------
-pkonfound(.4, 2, 100, 3, to_return = "thresh_plot")
+my_table <- tibble::tribble(
+~unsuccess, ~success,
+35,         17,
+17,         38,
+)
+pkonfound(two_by_two_table = my_table)
 
 ## -----------------------------------------------------------------------------
-pkonfound(.4, 2, 100, 3, to_return = "corr_plot")
-
-## -----------------------------------------------------------------------------
-pkonfound(.4, 2, 100, 3, to_return = "raw_output")
-
-## -----------------------------------------------------------------------------
-# pkonfound(a = 35, b = 17, c = 17, d = 38)
-
-## -----------------------------------------------------------------------------
-# my_table <- tibble::tribble(
-# ~unsuccess, ~success,
-# 35,         17,
-# 17,         38,
-# )
-# 
-# pkonfound(two_by_two_table = my_table)
+pkonfound(est_eff = 0.4, std_err = 0.103, 
+          n_obs = 20888, n_covariates = 3, 
+          n_treat = 17888, model_type = 'logistic')
 
 ## -----------------------------------------------------------------------------
 m1 <- lm(mpg ~ wt + hp + qsec, data = mtcars)
 m1
 
-konfound(m1, hp)
+konfound(model_object = m1, 
+         tested_variable = hp)
 
 ## -----------------------------------------------------------------------------
-konfound(m1, wt, to_return = "table")
+konfound(model_object = m1, tested_variable = wt, to_return = "table")
 
-## ----message = F--------------------------------------------------------------
-# if forcats is not installed, this install it first using install.packages("forcats") for this to run
-if (requireNamespace("forcats")) {
-    d <- forcats::gss_cat
-    
-    d$married <- ifelse(d$marital == "Married", 1, 0)
-    
-    m2 <- glm(married ~ age, data = d, family = binomial(link = "logit"))
-    konfound(m2, age)
-}
+## -----------------------------------------------------------------------------
+# View summary stats for condition variable
+table(binary_dummy_data$condition)
+# Fit the logistic regression model
+m4 <- glm(outcome ~ condition + control, 
+          data = binary_dummy_data, family = binomial)
+# View the summary of the model
+summary(m4)
 
-## ----eval = FALSE-------------------------------------------------------------
-#  m4 <- glm(outcome ~ condition, data = binary_dummy_data)
-#  konfound(m4, condition, two_by_two = TRUE)
+## -----------------------------------------------------------------------------
+konfound(model_object = m4, 
+         tested_variable = condition,
+         two_by_two = TRUE, n_treat = 55)
 
 ## -----------------------------------------------------------------------------
 if (requireNamespace("lme4")) {
