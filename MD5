@@ -1,7 +1,7 @@
-9e02b8644c6d0e660d6b2e7e642de5ec *DESCRIPTION
+3c14bdf76001665cf154b7baf28eabf1 *DESCRIPTION
 bbec74af268844c6f27105f1b225aa62 *LICENSE
 101d741d91bc909930540164ecd0d4e9 *NAMESPACE
-6cb7fdd54bd0da64a447802c2276478c *NEWS.md
+cc761ec14f9b044af25b7650eaabd60e *NEWS.md
 09548690708f77e2a088e12dc804c03b *R/binary_dummy_data.R
 09674dc41634894fbadcf5b2fdbcae32 *R/concord1.R
 1af607da46000e35bf004cdb79068a99 *R/cop_pse_auxiliary.R
@@ -28,14 +28,14 @@ c0d152a7275921c8a3fb89e4e71c4193 *R/test_sensitivity_ln.R
 14a41d84fa0c608a13bb9baf436ca0ad *R/tkonfound.R
 44d5888fb1f8e67af57e1ad940a27408 *R/tkonfound_fig.R
 1c80bdaa6d00c2b296a4dbe96612eafe *R/zzz.R
-e782b9e2ecb3a8c8f71a9c92d23f7e40 *README.md
+8674f6bfe2c9c75b0ff71ff82c53d215 *README.md
 c9448c19cbd59b73fb334f242e5b30ea *build/vignette.rds
 86f7d46e552ecfc2fd38013ad3321355 *data/binary_dummy_data.rda
 d0dc086d6694848f69146106feefa096 *data/concord1.rda
 843e24f6ec2a9a1a9dd31f6e9d8578aa *data/mkonfound_ex.rda
-85d403c4ba3c86d0ef3bf618b32fb238 *inst/doc/introduction-to-konfound.R
-975f972c38dce985e2fc894923f1b172 *inst/doc/introduction-to-konfound.Rmd
-5ce47e0f22c54a46aa7420c609e8c199 *inst/doc/introduction-to-konfound.html
+f86f5c8f2d8ec6084b393cf7261eea84 *inst/doc/introduction-to-konfound.R
+a90996853c1d35c482291fa38c6c158e *inst/doc/introduction-to-konfound.Rmd
+e497b25abf5d816f296ef86b2ce36294 *inst/doc/introduction-to-konfound.html
 4b7caf8b09f1a97e7a43fcf994cbe8c8 *man/binary_dummy_data.Rd
 966b6f8f672645deff95993dc62d32ed *man/cal_delta_star.Rd
 bbc6b76bfb9ad7a84efb83bf132fae22 *man/cal_rxy.Rd
@@ -75,4 +75,5 @@ cc3487a5f925aaece1424adb20a4f5eb *tests/testthat/test-sensitivity_ln.R
 1f0a3154600c9ec61e34f084582f8092 *tests/testthat/test-test_cop.R
 8af5c7347c7702decd244793649ee2f6 *tests/testthat/test-test_pse.R
 fbe15e8cbdf58f453efc36834c3a8eac *tests/testthat/test-tkonfound.R
-975f972c38dce985e2fc894923f1b172 *vignettes/introduction-to-konfound.Rmd
+a90996853c1d35c482291fa38c6c158e *vignettes/introduction-to-konfound.Rmd
+83afce4f1f1336346ff4a70a8d98b9d1 *vignettes/references.bib
