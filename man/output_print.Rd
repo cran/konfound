@@ -24,7 +24,11 @@ output_print(
   sdy = NA,
   R2 = NA,
   rxcv = NA,
-  rycv = NA
+  rycv = NA,
+  rxcvGz,
+  rycvGz,
+  benchmark_corr_product = NA,
+  itcv_ratio_to_benchmark = NA
 )
 }
 \arguments{
@@ -68,6 +72,14 @@ statistical significance determination.}
 \item{rxcv}{the correlation between x and CV.}
 
 \item{rycv}{the correlation between y and CV.}
+
+\item{rxcvGz}{the correlation between predictor of interest and CV necessary to nullify the inference for smallest impact, conditioning on all observed covariates.}
+
+\item{rycvGz}{the correlation between outcome and CV necessary to nullify the inference for smallest impact, conditioning on all observed covariates.}
+
+\item{benchmark_corr_product}{the product of the correlations of covariates Z with X and Y (Rxz * Ryz), measuring the observed association strength.}
+
+\item{itcv_ratio_to_benchmark}{the ratio of the ITCV to the benchmark_corr_product, indicating the robustness of inference.}
 }
 \description{
 This function outputs printed text for various indices such as RIR

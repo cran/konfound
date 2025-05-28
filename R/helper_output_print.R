@@ -32,6 +32,10 @@
 #' @param R2 the unadjusted, original R2 in the observed function.
 #' @param rxcv the correlation between x and CV. 
 #' @param rycv the correlation between y and CV. 
+#' @param rxcvGz the correlation between predictor of interest and CV necessary to nullify the inference for smallest impact, conditioning on all observed covariates.
+#' @param rycvGz the correlation between outcome and CV necessary to nullify the inference for smallest impact, conditioning on all observed covariates.
+#' @param benchmark_corr_product the product of the correlations of covariates Z with X and Y (Rxz * Ryz), measuring the observed association strength.
+#' @param itcv_ratio_to_benchmark the ratio of the ITCV to the benchmark_corr_product, indicating the robustness of inference.
 #' @importFrom crayon bold underline italic
 
 output_print <- function(n_covariates,
@@ -53,19 +57,23 @@ output_print <- function(n_covariates,
                          sdy = NA,
                          R2 = NA,
                          rxcv = NA,
-                         rycv = NA) {
+                         rycv = NA,
+                         rxcvGz,
+                         rycvGz,
+                         benchmark_corr_product = NA,
+                         itcv_ratio_to_benchmark = NA) {
   if (index == "RIR"){
     cat(crayon::bold("Robustness of Inference to Replacement (RIR):\n"))
     if ((abs(est_eff) > abs(beta_threshhold)) & is.na(eff_thr) == TRUE) {
       cat(paste0("RIR = ", round(recase, 3), "\n"))
       cat("\n")
-      cat(paste0("To invalidate the inference of an effect using the threshold of ", round(beta_threshhold, 3), " for"))
+      cat(paste0("To nullify the inference of an effect using the threshold of ", round(beta_threshhold, 3), " for"))
       cat("\n")
       cat(paste0("statistical significance (with null hypothesis = ", nu, " and alpha = ", alpha, "), ", round(bias, 3), "%"))
       cat("\n")
-      cat(paste0("of the (", round(est_eff, 3), ") estimate would have to be due to bias. This implies that to"))
+      cat(paste0("of the estimate of ", round(est_eff, 3), " would have to be due to bias. This implies that to"))
       cat("\n")
-      cat(paste0("invalidate the inference one would expect to have to replace ", round(recase, 3), " (", round(bias, 3), "%)"))
+      cat(paste0("nullify the inference one would expect to have to replace ", round(recase, 3), " (", round(bias, 3), "%)"))
       cat("\n")
       cat(paste0("observations with data points for which the effect is ", nu, " (RIR = ", round(recase, 3), ").\n"))
       cat("\n")
@@ -84,9 +92,9 @@ output_print <- function(n_covariates,
           cat("The threshold used takes the same sign as the estimated effect. See comment above.")
           cat("\n")
       }
-      cat(paste0("To invalidate the inference based on your estimate, ", round(bias, 3), "% of the (", round(est_eff, 3), ")"))
+      cat(paste0("To nullify the inference based on your estimate, ", round(bias, 3), "% of the"))
       cat("\n")
-      cat(paste0("estimate would have to be due to bias. This implies that to invalidate"))
+      cat(paste0("estimate of ", round(est_eff, 3), " would have to be due to bias. This implies that to nullify"))
       cat("\n")
       cat(paste0("the inference one would expect to have to replace ", round(recase, 3), " (", round(bias, 3), "%) observation"))
       cat("\n")
@@ -99,7 +107,7 @@ output_print <- function(n_covariates,
       cat("\n")
       cat(paste0("is ", round(beta_threshhold, 3), " (with null hypothesis = ", nu, " and alpha = ", alpha, "). To reach that threshold,"))
       cat("\n")
-      cat(paste0(round(sustain, 3), "% of the (", round(est_eff, 3), ") estimate would have to be due to bias. This implies to sustain"))
+      cat(paste0(round(sustain, 3), "% of the estimate of ", round(est_eff, 3), " would have to be due to bias. This implies to sustain"))
       cat("\n")
       cat(paste0("an inference one would expect to have to replace ", round(recase, 3), " (", round(sustain, 3), "%) observations with"))
       cat("\n")
@@ -120,7 +128,7 @@ output_print <- function(n_covariates,
           cat("The threshold used takes the same sign as the estimated effect. See comment above.")
           cat("\n")
       }
-      cat(paste0("To reach that threshold, ", round(sustain, 3), "% of the (", round(est_eff, 3), ") estimate would have to be due"))
+      cat(paste0("To reach that threshold, ", round(sustain, 3), "% of the estimate of ", round(est_eff, 3), " would have to be due"))
       cat("\n")
       cat(paste0("to bias. This implies that to sustain an inference one would expect to have"))
       cat("\n")
@@ -156,46 +164,49 @@ output_print <- function(n_covariates,
 
   }
   if (index == "IT") { 
-    cat(crayon::bold("Impact Threshold for a Confounding Variable (ITCV):\n"))
+    cat(crayon::bold("Impact Threshold for a Confounding Variable (ITCV):"))
     cat("\n")
+    sign_interchangeable <- ifelse(sign(rxcv) == sign(rycv), "fixed", "interchangeable")
+    sign_cond_interchangeable <- ifelse(sign(rxcvGz) == sign(rycvGz), "fixed", "interchangeable")
+    
     if (abs(obs_r) > abs(critical_r) & obs_r > 0) {
         
         if (!is.na(sdx) && !is.na(sdy) && !is.na(R2) && n_covariates != 0) {
             
             cat("Unconditional ITCV:")
             cat("\n")
-            cat("The minimum impact of an omitted variable to invalidate an inference for")
+            cat("The minimum impact of an omitted variable to nullify an inference for")
             cat("\n")
-            cat(paste0("a null hypothesis of an effect of nu (", nu, ") is based on a correlation of ", round(rycv, 3)))
+            cat(paste0("a null hypothesis of an effect of ", nu, " (nu) is based on a correlation of ", round(rycv, 3)))
             cat("\n")
             cat(paste0("with the outcome and ", round(rxcv, 3), " with the predictor of interest (BEFORE conditioning"))
             cat("\n")
-            cat("on observed covariates; signs are interchangeable). This is based on a threshold")
+            cat("on observed covariates; signs are interchangeable if they are different).")
             cat("\n")
-            cat(paste0("effect of ", round(critical_r, 3), " for statistical significance (alpha = ", alpha, ").\n"))
+            cat(paste0("This is based on a threshold effect of ", round(critical_r, 3), " for statistical significance (alpha = ", alpha, ").\n"))
             cat("\n")
             cat("Correspondingly the UNCONDITIONAL impact of an omitted variable (as defined in Frank 2000) must be")
             cat("\n")
-            cat(paste0(round(rxcv, 3), " X ", round(rycv, 3), " = ", round(rxcv * rycv, 3), " to invalidate an inference for a null hypothesis of an effect of nu (", nu, ").\n", sep = ""))
+            cat(paste0(round(rycv, 3), " X ", round(rxcv, 3), " = ", round(rycv * rxcv, 3), " to nullify an inference for a null hypothesis of an effect of ", nu, " (nu).\n", sep = ""))
             cat("\n")
             
             cat("Conditional ITCV:")
             cat("\n")
         }
         
-      cat("The minimum impact of an omitted variable to invalidate an inference for")
+      cat("The minimum impact of an omitted variable to nullify an inference for")
       cat("\n")
-      cat(paste0("a null hypothesis of an effect of nu (", nu, ") is based on a correlation of ", round(r_con, 3)))
+      cat(paste0("a null hypothesis of an effect of ", nu, " (nu) is based on a correlation of ", round(rycvGz, 3)))
       cat("\n")
-      cat(paste0("with the outcome and ", round(r_con, 3), " with the predictor of interest (conditioning"))
+      cat(paste0("with the outcome and ", round(rxcvGz, 3), " with the predictor of interest (conditioning on all"))
       cat("\n")
-      cat("on all observed covariates in the model; signs are interchangeable). This is")
+      cat("observed covariates in the model; signs are interchangeable if they are different).")
       cat("\n")
-      cat(paste0("based on a threshold effect of ", round(critical_r, 3), " for statistical significance (alpha = ", alpha, ").\n"))
+      cat(paste0("This is based on a threshold effect of ", round(critical_r, 3), " for statistical significance (alpha = ", alpha, ").\n"))
       cat("\n")
-      cat("Correspondingly the impact of an omitted variable (as defined in Frank 2000) must be ") 
+      cat("Correspondingly the conditional impact of an omitted variable (as defined in Frank 2000) must be ") 
       cat("\n")
-      cat(paste0(round(r_con, 3), " X ", round(r_con, 3), " = ", round(r_con^2, 3), " to invalidate an inference for a null hypothesis of an effect of nu (", nu, ").\n", sep = ""))
+      cat(paste0(round(rycvGz, 3), " X ", round(rxcvGz, 3), " = ", round(rycvGz*rxcvGz, 3), " to nullify an inference for a null hypothesis of an effect of ", nu, " (nu).\n", sep = ""))
       
     } else if (abs(obs_r) > abs(critical_r) & obs_r < 0) {
         
@@ -203,19 +214,19 @@ output_print <- function(n_covariates,
         
             cat("Unconditional ITCV:")
             cat("\n")
-            cat("The minimum (in absolute value) impact of an omitted variable to invalidate")
+            cat("The minimum (in absolute value) impact of an omitted variable to nullify an inference")
             cat("\n")
-            cat(paste0("an inference for a null hypothesis of an effect of nu (", nu, ") is based on"))
+            cat(paste0("for a null hypothesis of an effect of ", nu, " (nu) is based on a correlation of ", round(rycv, 3), " with the"))
             cat("\n")
-            cat(paste0("a correlation of ", -round(rycv, 3), " with the outcome and ", round(rxcv, 3), " with the predictor of"))
+            cat(paste0("outcome and ", round(rxcv, 3), " with the predictor of interest (BEFORE conditioning on observed covariates;"))
             cat("\n")
-            cat("interest (BEFORE conditioning on observed covariates; signs are interchangeable).")
+            cat(paste0("signs are interchangeable if they are different). This is based on a threshold effect of ", round(critical_r, 3)))
             cat("\n")
-            cat(paste0("This is based on a threshold effect of ", round(critical_r, 3), " for statistical significance (alpha = ", alpha, ").\n"))
+            cat(paste0("for statistical significance (alpha = ", alpha, ").\n"))
             cat("\n")
             cat("Correspondingly the UNCONDITIONAL impact of an omitted variable (as defined in Frank 2000) must be") 
             cat("\n")
-            cat(paste0(round(rxcv, 3), " X ", round(rycv, 3), " = ", round(rxcv * rycv, 3), " to invalidate an inference for a null hypothesis of an effect of nu (", nu, ").\n", sep = ""))
+            cat(paste0(round(rycv, 3), " X ", round(rxcv, 3), " = ", round(rycv * rxcv, 3), " to nullify an inference for a null hypothesis of an effect of ", nu, " (nu).\n", sep = ""))
             cat("\n")
             
             cat("Conditional ITCV:")
@@ -223,21 +234,19 @@ output_print <- function(n_covariates,
 
         }
         
-      cat("The minimum (in absolute value) impact of an omitted variable to invalidate")
+      cat("The minimum (in absolute value) impact of an omitted variable to nullify an inference")
       cat("\n")
-      cat(paste0("an inference for a null hypothesis of an effect of nu (", nu, ") is based on"))
+      cat(paste0("for a null hypothesis of an effect of ", nu, " (nu) is based on a correlation of ", round(rycvGz, 3), " with the"))
       cat("\n")
-      cat(paste0("a correlation of ", -round(r_con, 3), " with the outcome and ", round(r_con, 3), " with the predictor of"))
+      cat(paste0("outcome and ", round(rxcvGz, 3), " with the predictor of interest (conditioning on all observed covariates"))
       cat("\n")
-      cat("interest (conditioning on all observed covariates in the model; signs are")
+      cat("in the model; signs are interchangeable if they are different). This is based on a threshold")
       cat("\n")
-      cat(paste0("interchangeable). This is based on a threshold effect of ", round(critical_r, 3), " for statistical"))
+      cat(paste0("effect of ", round(critical_r, 3), " for statistical significance (alpha = ", alpha, ").\n", sep = ""))
       cat("\n")
-      cat("significance (alpha = ", alpha, ").\n", sep = "")
+      cat("Correspondingly the conditional impact of an omitted variable (as defined in Frank 2000) must be") 
       cat("\n")
-      cat("Correspondingly the impact of an omitted variable (as defined in Frank 2000) must be") 
-      cat("\n")
-      cat(paste0(-round(r_con, 3), " X ", round(r_con, 3), " = ", -round(r_con^2, 3), " to invalidate an inference for a null hypothesis of an effect of nu (", nu, ").\n", sep = ""))
+      cat(paste0(round(rycvGz, 3), " X ", round(rxcvGz, 3), " = ", round(rycvGz*rxcvGz, 3), " to nullify an inference for a null hypothesis of an effect of ", nu, " (nu).\n", sep = ""))
       
     } else if (abs(obs_r) < abs(critical_r) & obs_r >= 0) {
         
@@ -245,42 +254,38 @@ output_print <- function(n_covariates,
         
             cat("Unconditional ITCV:")
             cat("\n")
-            cat("The maximum impact (in absolute value) of an omitted variable to sustain")
+            cat("The maximum impact (in absolute value) of an omitted variable to sustain an inference")
             cat("\n")
-            cat(paste0("an inference for a null hypothesis of an effect of nu (", nu, ") is based on"))
+            cat(paste0("for a null hypothesis of an effect of ", nu, " (nu) is based on a correlation of ", round(rycv, 3), " with"))
             cat("\n")
-            cat(paste0("a correlation of ", -round(rycv, 3), " with the outcome and ", round(rxcv, 3), " with the predictor"))
+            cat(paste0("the outcome and ", round(rxcv, 3), " with the predictor of interest (BEFORE conditioning on observed"))
             cat("\n")
-            cat("of interest (BEFORE conditioning on observed covariates; signs are")
+            cat("covariates; signs are interchangeable if they are different). This is based on a threshold")
             cat("\n")
-            cat(paste0("interchangeable). This is based on a threshold effect of ", round(beta_threshhold, 3), " for"))
+            cat(paste0("effect of ", round(beta_threshhold, 3), " for statistical significance (alpha = ", alpha, ").\n", sep = ""))
             cat("\n")
-            cat("statistical significance (alpha = ", alpha, ").\n", sep = "")
+            cat("Correspondingly the UNCONDITIONAL maximum impact of an omitted variable (as defined in Frank 2000) is ")
             cat("\n")
-            cat("Correspondingly the UNCONDITIONAL impact of an omitted variable (as defined in Frank 2000) must be ")
-            cat("\n")
-            cat(paste0(round(rxcv, 3), " X ", round(rycv, 3), " = ", round(rxcv * rycv, 3), " to sustain an inference for a null hypothesis of an effect of nu (", nu, ").\n", sep = ""))
+            cat(paste0(round(rycv, 3), " X ", round(rxcv, 3), " = ", round(rycv * rxcv, 3), " to sustain an inference for a null hypothesis of an effect of ", nu, " (nu).\n", sep = ""))
             cat("\n")
             
             cat("Conditional ITCV:")
             cat("\n")
 
             }
-      cat("The maximum impact (in absolute value) of an omitted variable to sustain")
+      cat("The maximum impact (in absolute value) of an omitted variable to sustain an inference")
       cat("\n")
-      cat(paste0("an inference for a null hypothesis of an effect of nu (", nu, ") is based on"))
+      cat(paste0("for a null hypothesis of an effect of ", nu, " (nu) is based on a correlation of ", round(rycvGz, 3), " with"))
       cat("\n")
-      cat(paste0("a correlation of ", -round(r_con, 3), " with the outcome and ", round(r_con, 3), " with the predictor"))
+      cat(paste0("the outcome and ", round(rxcvGz, 3), " with the predictor of interest (conditioning on all observed"))
       cat("\n")
-      cat("of interest (conditioning on all observed covariates in the model;")
+      cat("covariates in the model; signs are interchangeable if they are different). This is")
       cat("\n")
-      cat(paste0("signs are interchangeable). This is based on a threshold effect of ", round(beta_threshhold, 3)))
+      cat(paste0("based on a threshold effect of ", round(beta_threshhold, 3), " for statistical significance (alpha = ", alpha, ").\n", sep = ""))
       cat("\n")
-      cat("for statistical significance (alpha = ", alpha, ").\n", sep = "")
+      cat("Correspondingly the maximum impact of an omitted variable (as defined in Frank 2000) is ")
       cat("\n")
-      cat("Correspondingly the impact of an omitted variable (as defined in Frank 2000) must be ")
-      cat("\n")
-      cat(paste0(-round(r_con, 3), " X ", round(r_con, 3), " = ", -round(r_con^2, 3), " to sustain an inference for a null hypothesis of an effect of nu (", nu, ").\n", sep = ""))
+      cat(paste0(round(rycvGz, 3), " X ", round(rxcvGz, 3), " = ", round(rycvGz*rxcvGz, 3), " to sustain an inference for a null hypothesis of an effect of ", nu, " (nu).\n", sep = ""))
       
     } else if (abs(obs_r) < abs(critical_r) & obs_r < 0) {
         
@@ -288,38 +293,38 @@ output_print <- function(n_covariates,
         
             cat("Unconditional ITCV:")
             cat("\n")
-            cat("The maximum impact of an omitted variable to sustain an inference for")
+            cat("The maximum impact of an omitted variable to sustain an inference for a null hypothesis")
             cat("\n")
-            cat(paste0("a null hypothesis of an effect of nu (", nu, ") is based on a correlation of ", round(rycv, 3)))
+            cat(paste0("of an effect of ", nu, " (nu) is based on a correlation of ", round(rycv, 3), " with the outcome and ", round(rxcv, 3)))
             cat("\n")
-            cat(paste0("with the outcome and ", round(rxcv, 3), " with the predictor of interest (BEFORE conditioning"))
+            cat(paste0("with the predictor of interest (BEFORE conditioning on observed covariates; signs are"))
             cat("\n")
-            cat("on observed covariates; signs are interchageable). This is based on a threshold")
+            cat(paste0("interchangeable if they are different). This is based on a threshold effect of ", round(beta_threshhold, 3)))
             cat("\n")
-            cat(paste0("effect of ", round(beta_threshhold, 3), " for statistical significance (alpha = ", alpha, ").\n"))
+            cat(paste0("for statistical significance (alpha = ", alpha, ").\n"))
             cat("\n")
-            cat("Correspondingly the UNCONDITIONAL impact of an omitted variable (as defined in Frank 2000) must be ")
+            cat("Correspondingly the UNCONDITIONAL maximum impact of an omitted variable (as defined in Frank 2000) is ")
             cat("\n")
-            cat(paste0(round(rxcv, 3), " X ", round(rycv, 3), " = ", round(rxcv * rycv, 3), " to sustain an inference for a null hypothesis of an effect of nu (", nu, ").\n", sep = ""))
+            cat(paste0(round(rycv, 3), " X ", round(rxcv, 3), " = ", round(rycv * rxcv, 3), " to sustain an inference for a null hypothesis of an effect of ", nu, " (nu).\n", sep = ""))
             cat("\n")
             
             cat("Conditional ITCV:")
             cat("\n")
             }
         
-      cat("The maximum impact of an omitted variable to sustain an inference for")
+      cat("The maximum impact of an omitted variable to sustain an inference for a null hypothesis")
       cat("\n")
-      cat(paste0("a null hypothesis of an effect of nu (", nu, ") is based on a correlation of ", round(r_con, 3)))
+      cat(paste0("of an effect of ", nu, " (nu) is based on a correlation of ", round(rycvGz, 3), " with the outcome and ", round(rxcvGz, 3)))
       cat("\n")
-      cat(paste0("with the outcome and ", round(r_con, 3), " with the predictor of interest (conditioning"))
+      cat(paste0("with the predictor of interest (conditioning on all observed covariates in the model;"))
       cat("\n")
-      cat("on all observed covariates in the model; signs are interchageable). This is")
+      cat("signs are interchangeable if they are different). This is based on a threshold effect of")
       cat("\n")
-      cat(paste0("based on a threshold effect of ", round(beta_threshhold, 3), " for statistical significance (alpha = ", alpha, ").\n"))
+      cat(paste0(round(beta_threshhold, 3), " for statistical significance (alpha = ", alpha, ").\n"))
       cat("\n")
-      cat("Correspondingly the impact of an omitted variable (as defined in Frank 2000) must be ")
+      cat("Correspondingly the maximum impact of an omitted variable (as defined in Frank 2000) is ")
       cat("\n")
-      cat(paste0(round(r_con, 3), " X ", round(r_con, 3), " = ", round(r_con^2, 3), " to sustain an inference for a null hypothesis of an effect of nu (", nu, ").\n", sep = ""))
+      cat(paste0(round(rycvGz, 3), " X ", round(rxcvGz, 3), " = ", round(rycvGz*rxcvGz, 3), " to sustain an inference for a null hypothesis of an effect of ", nu, " (nu).\n", sep = ""))
       
     } else if (obs_r == critical_r) {
       warning("The correlation is exactly equal to the threshold.\n")
@@ -329,7 +334,7 @@ output_print <- function(n_covariates,
     if (is.na(sdx) && is.na(sdy) && is.na(R2)) {
         cat("For calculation of unconditional ITCV using pkonfound(), additionally include")
         cat("\n")
-        cat("the R2, sdx, and sdy as input, and request raw output.")
+        cat("the R2, sdx, and sdy as input.")
         cat("\n")
         cat("\n")
       }
@@ -339,6 +344,29 @@ output_print <- function(n_covariates,
         cat("\n")
         cat("there are covariates included (number of covariates > 0).")
         cat("\n")
+        cat("\n")
+    }
+    
+    if (!is.na(benchmark_corr_product)) {
+        cat(crayon::bold("Interpretation of Benchmark Correlations for ITCV:"))
+        cat("\n")
+        cat(paste0("Benchmark correlation product ('benchmark_corr_product') is Rxz*Ryz = ", formatC(benchmark_corr_product, format = "f", digits = 4),
+                   ", showing"))
+        cat("\n")
+        cat("the association strength of all observed covariates Z with X and Y.\n")
+        cat("\n")
+        cat(paste0("The ratio ('itcv_ratio_to_benchmark') is unconditional ITCV/Benchmark = ", formatC(abs(rycv * rxcv), format = "f", digits = 4), "/",
+                   formatC(benchmark_corr_product, format = "f", digits = 4), " = ",
+                   formatC(itcv_ratio_to_benchmark, format = "f", digits = 4), ".\n"))
+        cat("\n")
+        cat("The larger the ratio the stronger must be the unobserved impact relative to the")
+        cat("\n")
+        cat("impact of all observed covariates to nullify the inference. The larger the ratio")
+        cat("\n")
+        cat("the more robust the inference.\n")
+        cat("\n")
+        cat("If Z includes pretests or fixed effects, the benchmark may be inflated, making the ratio\n")
+        cat("unusually small. Interpret robustness cautiously in such cases.\n")
         cat("\n")
     }
     

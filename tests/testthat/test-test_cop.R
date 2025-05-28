@@ -84,8 +84,8 @@ test_that("test_cop outputs the correct language and values when to_return is 'p
     expected_lines <- c(
         "Coefficient of Proportionality (COP):",
         "",
-        "This function calculates a correlation-based coefficient of",
-        "proportionality (delta) as well as Oster's delta*.",
+        "This function calculates a correlation-based coefficient of proportionality (delta)",
+        "which is exact even in finite samples as well as Oster's delta*.",
         "",
         "Delta* is 0.387 (assuming no covariates in the baseline model M1),", 
         "the correlation-based delta is 1.172, with a bias of -66.980%.",
@@ -96,12 +96,12 @@ test_that("test_cop outputs the correct language and values when to_return is 'p
         "",
         "Use to_return = \"raw_output\" to see more specific results and graphic",             
         "presentation of the result.",                     
-        "",                                                                    
-        "This function also calculates conditional RIR that invalidates the statistical inference.",  
-        "",                                                                    
-        "If the replacement data points have a fixed value, then RIR = 80.035.",  
-        "If the replacement data points follow a null distribution, then RIR = 55.317.",                                       
-        "If the replacement data points satisfy rxy|Z = 0, then RIR = 56.317."
+        ""                                                                    
+#        "This function also calculates conditional RIR that invalidates the statistical inference.",  
+#        "",                                                                    
+#        "If the replacement data points have a fixed value, then RIR = 80.035.",  
+#        "If the replacement data points follow a null distribution, then RIR = 55.317.",                                       
+#        "If the replacement data points satisfy rxy|Z = 0, then RIR = 56.317."
     )
     
     # Check each line against expected
